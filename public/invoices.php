@@ -35,6 +35,7 @@ page_header('Счета');
             <option value="<?= h($p) ?>"<?= $p == $period ? ' selected' : '' ?>><?= h($p) ?></option>
         <?php endforeach; ?>
     </select>
+    <a href="billing.php?period=<?= h($period) ?>">Пересчитать по объёму</a>
     <a href="export_1c.php">Выгрузить отправленные счета в 1С</a>
 </form>
 
@@ -71,9 +72,4 @@ page_header('Счета');
     </tbody>
 </table>
 
-<h2>Сформировать счета за месяц</h2>
-<form class="actions" method="post" action="billing_run.php">
-    <input type="month" name="period" value="<?= h($period) ?>">
-    <button type="submit">Сформировать</button>
-</form>
 <?php page_footer();

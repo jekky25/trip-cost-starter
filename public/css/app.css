@@ -122,3 +122,16 @@ table.info th {
     padding: 8px 12px;
     margin-bottom: 12px;
 }
+
+.note {
+    color: #555;
+    margin: 0 0 12px;
+}
+
+.diff-up {
+    color: #0a7a32;
+}
+
+.diff-down {
+    color: #a32020;
+}

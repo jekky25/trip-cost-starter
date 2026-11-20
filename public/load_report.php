@@ -7,10 +7,12 @@ if (!in_array($month, $months)) {
     $month = $months[0];
 }
 
-$trips = db()->query("SELECT t.*, (SELECT SUM(weight_kg) FROM cargo WHERE trip_id = t.id) AS weight_kg
+$st = db()->prepare("SELECT t.*, (SELECT SUM(weight_kg) FROM cargo WHERE trip_id = t.id) AS weight_kg
     FROM trips t
-    WHERE t.departure_date LIKE '$month%' AND t.status <> 'cancelled'
-    ORDER BY t.departure_date")->fetchAll();
+    WHERE t.departure_date LIKE ? AND t.status <> 'cancelled'
+    ORDER BY t.departure_date");
+$st->execute(array($month . '%'));
+$trips = $st->fetchAll();
 
 page_header('Загрузка машин');
 ?>

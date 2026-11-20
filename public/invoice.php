@@ -2,20 +2,24 @@
 require __DIR__ . '/../lib/bootstrap.php';
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-$invoice = db()->query("SELECT i.*, cl.name AS client_name, cl.inn
+$st = db()->prepare('SELECT i.*, cl.name AS client_name, cl.inn
     FROM invoices i
     JOIN clients cl ON cl.id = i.client_id
-    WHERE i.id = $id")->fetch();
+    WHERE i.id = ?');
+$st->execute(array($id));
+$invoice = $st->fetch();
 if (!$invoice) {
     http_response_code(404);
     die('Счёт не найден');
 }
 
-$lines = db()->query("SELECT l.*, t.number, t.departure_date
+$st = db()->prepare('SELECT l.*, t.number, t.departure_date
     FROM invoice_lines l
     JOIN trips t ON t.id = l.trip_id
-    WHERE l.invoice_id = $id
-    ORDER BY t.departure_date")->fetchAll();
+    WHERE l.invoice_id = ?
+    ORDER BY t.departure_date');
+$st->execute(array($id));
+$lines = $st->fetchAll();
 
 page_header('Счёт № ' . $invoice['id']);
 ?>

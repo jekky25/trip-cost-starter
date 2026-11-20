@@ -19,11 +19,13 @@ fputcsv($out, array('invoice', 'inn', 'client', 'period', 'trip', 'amount'), ';'
 
 $ids = array();
 foreach ($invoices as $invoice) {
-    $lines = $db->query("SELECT l.amount, t.number
+    $st = $db->prepare('SELECT l.amount, t.number
         FROM invoice_lines l
         JOIN trips t ON t.id = l.trip_id
-        WHERE l.invoice_id = {$invoice['id']}
-        ORDER BY l.id")->fetchAll();
+        WHERE l.invoice_id = ?
+        ORDER BY l.id');
+    $st->execute(array((int)$invoice['id']));
+    $lines = $st->fetchAll();
     foreach ($lines as $line) {
         fputcsv($out, array(
             $invoice['id'],
